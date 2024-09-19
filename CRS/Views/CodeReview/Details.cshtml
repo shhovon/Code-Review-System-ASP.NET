@@ -1,0 +1,26 @@
+﻿@model CRS.Models.CodeSubmission
+
+<h2>Code Review Details</h2>
+
+<h3>Submitted Code</h3>
+<pre><code>@Html.Raw(Model.CodeSnippet)</code></pre>
+
+<h3>Suggestions</h3>
+<ul>
+    @foreach (var suggestion in Model.CodeSuggestions)
+    {
+        if (suggestion.SuggestionType == "AI Generated Correction")
+        {
+            <li>
+                <strong>@suggestion.SuggestionType:</strong>
+                <pre><code>@Html.Raw(suggestion.SuggestionText)</code></pre>
+            </li>
+        }
+        else
+        {
+            <li>
+                <strong>@suggestion.SuggestionType:</strong> @Html.Raw(suggestion.SuggestionText)
+            </li>
+        }
+    }
+</ul>

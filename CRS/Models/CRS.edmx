@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CRSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CodeSubmissions">
+          <Key>
+            <PropertyRef Name="SubmissionId" />
+          </Key>
+          <Property Name="SubmissionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="CodeSnippet" Type="text" Nullable="false" />
+          <Property Name="Language" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CodeSuggestions">
+          <Key>
+            <PropertyRef Name="SuggestionId" />
+          </Key>
+          <Property Name="SuggestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SubmissionId" Type="int" />
+          <Property Name="SuggestionText" Type="nvarchar" MaxLength="1000" />
+          <Property Name="SuggestionType" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__CodeSubmi__UserI__398D8EEE">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="CodeSubmissions" Type="Self.CodeSubmissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="CodeSubmissions">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CodeSugge__Submi__3D5E1FD2">
+          <End Role="CodeSubmissions" Type="Self.CodeSubmissions" Multiplicity="0..1" />
+          <End Role="CodeSuggestions" Type="Self.CodeSuggestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CodeSubmissions">
+              <PropertyRef Name="SubmissionId" />
+            </Principal>
+            <Dependent Role="CodeSuggestions">
+              <PropertyRef Name="SubmissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CRSModelStoreContainer">
+          <EntitySet Name="CodeSubmissions" EntityType="Self.CodeSubmissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CodeSuggestions" EntityType="Self.CodeSuggestions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__CodeSubmi__UserI__398D8EEE" Association="Self.FK__CodeSubmi__UserI__398D8EEE">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="CodeSubmissions" EntitySet="CodeSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CodeSugge__Submi__3D5E1FD2" Association="Self.FK__CodeSugge__Submi__3D5E1FD2">
+            <End Role="CodeSubmissions" EntitySet="CodeSubmissions" />
+            <End Role="CodeSuggestions" EntitySet="CodeSuggestions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CRSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CodeSubmission">
+          <Key>
+            <PropertyRef Name="SubmissionId" />
+          </Key>
+          <Property Name="SubmissionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="CodeSnippet" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Language" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK__CodeSubmi__UserI__398D8EEE" FromRole="CodeSubmissions" ToRole="Users" />
+          <NavigationProperty Name="CodeSuggestions" Relationship="Self.FK__CodeSugge__Submi__3D5E1FD2" FromRole="CodeSubmissions" ToRole="CodeSuggestions" />
+        </EntityType>
+        <EntityType Name="CodeSuggestion">
+          <Key>
+            <PropertyRef Name="SuggestionId" />
+          </Key>
+          <Property Name="SuggestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubmissionId" Type="Int32" />
+          <Property Name="SuggestionText" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="SuggestionType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CodeSubmission" Relationship="Self.FK__CodeSugge__Submi__3D5E1FD2" FromRole="CodeSuggestions" ToRole="CodeSubmissions" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CodeSubmissions" Relationship="Self.FK__CodeSubmi__UserI__398D8EEE" FromRole="Users" ToRole="CodeSubmissions" />
+        </EntityType>
+        <Association Name="FK__CodeSubmi__UserI__398D8EEE">
+          <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+          <End Role="CodeSubmissions" Type="Self.CodeSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="CodeSubmissions">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CodeSugge__Submi__3D5E1FD2">
+          <End Role="CodeSubmissions" Type="Self.CodeSubmission" Multiplicity="0..1" />
+          <End Role="CodeSuggestions" Type="Self.CodeSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CodeSubmissions">
+              <PropertyRef Name="SubmissionId" />
+            </Principal>
+            <Dependent Role="CodeSuggestions">
+              <PropertyRef Name="SubmissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CRSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CodeSubmissions" EntityType="Self.CodeSubmission" />
+          <EntitySet Name="CodeSuggestions" EntityType="Self.CodeSuggestion" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK__CodeSubmi__UserI__398D8EEE" Association="Self.FK__CodeSubmi__UserI__398D8EEE">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="CodeSubmissions" EntitySet="CodeSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CodeSugge__Submi__3D5E1FD2" Association="Self.FK__CodeSugge__Submi__3D5E1FD2">
+            <End Role="CodeSubmissions" EntitySet="CodeSubmissions" />
+            <End Role="CodeSuggestions" EntitySet="CodeSuggestions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CRSModelStoreContainer" CdmEntityContainer="CRSEntities">
+          <EntitySetMapping Name="CodeSubmissions">
+            <EntityTypeMapping TypeName="CRSModel.CodeSubmission">
+              <MappingFragment StoreEntitySet="CodeSubmissions">
+                <ScalarProperty Name="SubmissionId" ColumnName="SubmissionId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CodeSnippet" ColumnName="CodeSnippet" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CodeSuggestions">
+            <EntityTypeMapping TypeName="CRSModel.CodeSuggestion">
+              <MappingFragment StoreEntitySet="CodeSuggestions">
+                <ScalarProperty Name="SuggestionId" ColumnName="SuggestionId" />
+                <ScalarProperty Name="SubmissionId" ColumnName="SubmissionId" />
+                <ScalarProperty Name="SuggestionText" ColumnName="SuggestionText" />
+                <ScalarProperty Name="SuggestionType" ColumnName="SuggestionType" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="CRSModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
