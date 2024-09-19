@@ -81,15 +81,14 @@ namespace CRS.Controllers
 
         private string IndentCode(string code, string language)
         {
-            var lines = code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            var lines = SplitIntoLogicalLines(code);
             var indentedLines = new List<string>();
             int indentLevel = 0;
             string indentString = GetIndentString(language);
             bool inMultiLineComment = false;
 
-            for (int i = 0; i < lines.Length; i++)
+            foreach (var line in lines)
             {
-                var line = lines[i];
                 var trimmedLine = line.Trim();
 
                 if (string.IsNullOrWhiteSpace(trimmedLine))
@@ -105,20 +104,15 @@ namespace CRS.Controllers
                 {
                     var indentedLine = new string(' ', indentLevel * indentString.Length);
 
-                    // check if the line starts with a closing brace
-                    if (trimmedLine.StartsWith("}"))
-                    {
+                    if (trimmedLine.StartsWith("}") || trimmedLine.StartsWith(")"))
                         indentLevel = Math.Max(0, indentLevel - 1);
-                        indentedLine = new string(' ', indentLevel * indentString.Length);
-                    }
 
                     indentedLine += trimmedLine;
                     indentedLines.Add(indentedLine);
 
-                    // adjust indent level for the next line
-                    if (trimmedLine.EndsWith("{"))
+                    if (trimmedLine.EndsWith("{") || trimmedLine.EndsWith("("))
                         indentLevel++;
-                    else if (trimmedLine.EndsWith("}") && !trimmedLine.StartsWith("}"))
+                    else if ((trimmedLine.EndsWith("}") || trimmedLine.EndsWith(")")) && !trimmedLine.StartsWith("}") && !trimmedLine.StartsWith(")"))
                         indentLevel = Math.Max(0, indentLevel - 1);
                 }
                 else
@@ -131,6 +125,45 @@ namespace CRS.Controllers
             }
 
             return string.Join(Environment.NewLine, indentedLines);
+        }
+
+        private List<string> SplitIntoLogicalLines(string code)
+        {
+            var logicalLines = new List<string>();
+            var currentLine = "";
+            bool inString = false;
+            char stringDelimiter = '\0';
+
+            foreach (char c in code)
+            {
+                currentLine += c;
+
+                if (c == '"' || c == '\'')
+                {
+                    if (!inString)
+                    {
+                        inString = true;
+                        stringDelimiter = c;
+                    }
+                    else if (c == stringDelimiter)
+                    {
+                        inString = false;
+                    }
+                }
+
+                if (!inString && (c == ';' || c == '{' || c == '}'))
+                {
+                    logicalLines.Add(currentLine.Trim());
+                    currentLine = "";
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(currentLine))
+            {
+                logicalLines.Add(currentLine.Trim());
+            }
+
+            return logicalLines;
         }
 
 
