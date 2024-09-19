@@ -1,13 +1,16 @@
-﻿@model CRS.Models.CodeSubmission
+﻿@model CRS.ViewModels.CodeReviewDetailsViewModel
 
 <h2>Code Review Details</h2>
 
-<h3>Submitted Code</h3>
-<pre><code>@Html.Raw(Model.CodeSnippet)</code></pre>
+<h3>Original Submitted Code</h3>
+<pre><code>@Html.Raw(Model.OriginalCode)</code></pre>
+
+<h3>Properly Indented Code</h3>
+<pre><code>@Html.Raw(Model.IndentedCode)</code></pre>
 
 <h3>Suggestions</h3>
 <ul>
-    @foreach (var suggestion in Model.CodeSuggestions)
+    @foreach (var suggestion in Model.Suggestions)
     {
         if (suggestion.SuggestionType == "AI Generated Correction")
         {

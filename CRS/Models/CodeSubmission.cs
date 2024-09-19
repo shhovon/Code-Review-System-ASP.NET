@@ -22,6 +22,7 @@ namespace CRS.Models
     
         public int SubmissionId { get; set; }
         public Nullable<int> UserId { get; set; }
+        public string OriginalCode { get; set; }
         public string CodeSnippet { get; set; }
         public string Language { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }

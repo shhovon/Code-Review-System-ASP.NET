@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using CRS.Models;
+using CRS.ViewModels;
 
 namespace CRS.Controllers
 {
@@ -33,8 +34,12 @@ namespace CRS.Controllers
             {
                 try
                 {
-                    var formattedCode = IndentCode(submission.CodeSnippet, submission.Language);
-                    submission.CodeSnippet = formattedCode;
+                    // Save the original user input
+                    submission.OriginalCode = submission.CodeSnippet;
+
+                    // Generate the indented version
+                    submission.CodeSnippet = IndentCode(submission.CodeSnippet, submission.Language);
+
                     submission.CreatedAt = DateTime.Now;
                     _context.CodeSubmissions.Add(submission);
                     await _context.SaveChangesAsync();
@@ -54,12 +59,21 @@ namespace CRS.Controllers
             var submission = _context.CodeSubmissions
                 .Include("CodeSuggestions")
                 .FirstOrDefault(s => s.SubmissionId == id);
+
             if (submission == null)
             {
                 return HttpNotFound();
             }
 
-            return View(submission);
+            var viewModel = new CodeReviewDetailsViewModel
+            {
+                OriginalCode = submission.CodeSnippet,
+                IndentedCode = IndentCode(submission.CodeSnippet, submission.Language),
+                Language = submission.Language,
+                Suggestions = submission.CodeSuggestions.ToList()
+            };
+
+            return View(viewModel);
         }
 
         private List<SelectListItem> GetProgrammingLanguages()
