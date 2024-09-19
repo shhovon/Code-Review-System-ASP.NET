@@ -1,6 +1,9 @@
 ﻿@model CRS.ViewModels.CodeReviewDetailsViewModel
 
-<h2>Code Review Details</h2>
+@{
+    ViewBag.Title = "Code Review Details";
+}
+
 
 <h3>Original Submitted Code</h3>
 <pre><code>@Html.Raw(Model.OriginalCode)</code></pre>
