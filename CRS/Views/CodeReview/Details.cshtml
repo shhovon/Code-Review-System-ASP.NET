@@ -8,10 +8,12 @@
 <h3>Original Submitted Code</h3>
 <pre><code>@Html.Raw(Model.OriginalCode)</code></pre>
 
+<hr />
+
 <h3>Properly Indented Code</h3>
 <pre><code>@Html.Raw(Model.IndentedCode)</code></pre>
 
-<h3>Suggestions</h3>
+@*<h3>Suggestions</h3>
 <ul>
     @foreach (var suggestion in Model.Suggestions)
     {
@@ -29,4 +31,4 @@
             </li>
         }
     }
-</ul>
+</ul>*@

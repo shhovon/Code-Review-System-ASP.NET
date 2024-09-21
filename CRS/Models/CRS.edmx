@@ -4,13 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CRSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CRSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CodeSubmissions">
           <Key>
             <PropertyRef Name="SubmissionId" />
           </Key>
           <Property Name="SubmissionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" />
+          <Property Name="OrgCodeSnippet" Type="text" />
           <Property Name="CodeSnippet" Type="text" Nullable="false" />
           <Property Name="Language" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" />
@@ -71,8 +72,7 @@
             <End Role="CodeSuggestions" EntitySet="CodeSuggestions" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CRSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -87,6 +87,7 @@
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="User" Relationship="Self.FK__CodeSubmi__UserI__398D8EEE" FromRole="CodeSubmissions" ToRole="Users" />
           <NavigationProperty Name="CodeSuggestions" Relationship="Self.FK__CodeSugge__Submi__3D5E1FD2" FromRole="CodeSubmissions" ToRole="CodeSuggestions" />
+          <Property Name="OrgCodeSnippet" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CodeSuggestion">
           <Key>
@@ -155,6 +156,7 @@
           <EntitySetMapping Name="CodeSubmissions">
             <EntityTypeMapping TypeName="CRSModel.CodeSubmission">
               <MappingFragment StoreEntitySet="CodeSubmissions">
+                <ScalarProperty Name="OrgCodeSnippet" ColumnName="OrgCodeSnippet" />
                 <ScalarProperty Name="SubmissionId" ColumnName="SubmissionId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CodeSnippet" ColumnName="CodeSnippet" />

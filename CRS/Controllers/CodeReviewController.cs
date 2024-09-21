@@ -35,10 +35,10 @@ namespace CRS.Controllers
                 try
                 {
                     // Save the original user input
-                    submission.OriginalCode = submission.CodeSnippet;
+                    submission.OrgCodeSnippet = submission.OrgCodeSnippet;
 
                     // Generate the indented version
-                    submission.CodeSnippet = IndentCode(submission.CodeSnippet, submission.Language);
+                    submission.CodeSnippet = IndentCode(submission.OrgCodeSnippet, submission.Language);
 
                     submission.CreatedAt = DateTime.Now;
                     _context.CodeSubmissions.Add(submission);
@@ -67,7 +67,7 @@ namespace CRS.Controllers
 
             var viewModel = new CodeReviewDetailsViewModel
             {
-                OriginalCode = submission.CodeSnippet,
+                OriginalCode = submission.OrgCodeSnippet,
                 IndentedCode = IndentCode(submission.CodeSnippet, submission.Language),
                 Language = submission.Language,
                 Suggestions = submission.CodeSuggestions.ToList()
