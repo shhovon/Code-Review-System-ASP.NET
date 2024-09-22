@@ -35,25 +35,35 @@ namespace CRS.Controllers
             {
                 try
                 {
-                    // Save the original user input
-                    submission.OrgCodeSnippet = submission.OrgCodeSnippet;
+                    var username = User.Identity.Name;
+                    var user = _context.Users.FirstOrDefault(u => u.Username == username);
 
-                    // Generate the indented version
-                    submission.CodeSnippet = IndentCode(submission.OrgCodeSnippet, submission.Language);
+                    if (user != null)
+                    {
 
-                    submission.CreatedAt = DateTime.Now;
-                    _context.CodeSubmissions.Add(submission);
-                    await _context.SaveChangesAsync();
+                        submission.UserId = user.UserId;
+                        submission.OrgCodeSnippet = submission.OrgCodeSnippet;
+                        submission.CodeSnippet = IndentCode(submission.OrgCodeSnippet, submission.Language);
+                        submission.CreatedAt = DateTime.Now;
+                        _context.CodeSubmissions.Add(submission);
+                        await _context.SaveChangesAsync();
 
-                    return RedirectToAction("Details", new { id = submission.SubmissionId });
+                        return RedirectToAction("Details", new { id = submission.SubmissionId });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "User not found. Please log in.");
+                    }
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", "An error occurred while processing your submission. Please try again.");
                 }
             }
+
             return View(submission);
         }
+
 
         public ActionResult Details(int id)
         {

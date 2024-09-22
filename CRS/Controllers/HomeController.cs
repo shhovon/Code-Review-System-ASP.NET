@@ -8,6 +8,7 @@ using System.Web.Security;
 
 namespace CRS.Controllers
 {
+
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -69,7 +70,7 @@ namespace CRS.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "Home");
         }
     }
 }

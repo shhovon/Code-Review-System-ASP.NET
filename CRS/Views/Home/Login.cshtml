@@ -14,16 +14,19 @@
 
 @using (Html.BeginForm("Login", "Home", FormMethod.Post))
 {
-    <div class="form-group">
-        @Html.Label("Username")
-        @Html.TextBox("username", null, new { @class = "form-control" })
-    </div>
-    <div class="form-group">
-        @Html.Label("Password")
-        @Html.Password("password", null, new { @class = "form-control" })
+    <div class="col-sm-9">
+        <div class="form-group-material">
+            @Html.TextBox("username", null, new { id = "register-username", @class = "input-material", required = "required" })
+            <label for="register-username" class="label-material">Username</label>
+        </div>
+        <div class="form-group-material">
+            @Html.Password("password", null, new { id = "register-password", @class = "input-material", required = "required" })
+            <label for="register-password" class="label-material">Password</label>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 }
+
 
 @Html.ValidationSummary(true, "", new { @class = "alert alert-danger custom-error-message" })
 

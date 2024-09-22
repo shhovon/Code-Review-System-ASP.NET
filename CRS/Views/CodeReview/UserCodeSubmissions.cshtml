@@ -5,9 +5,10 @@
 
 @if (Model != null && Model.Any())
 {
-<table class="table table-bordered">
+<table class="table">
     <thead>
         <tr>
+            <th>#</th>
             <th>Original Code</th>
             <th>Indented Code</th>
             <th>Language</th>
@@ -15,33 +16,38 @@
         </tr>
     </thead>
     <tbody>
+        @{
+           int sl = 1;
+         }
         @foreach (var submission in Model)
         {
-<tr>
-    <td>
-        <a href="@Url.Action("Details", "CodeReview", new { id = submission.SubmissionId })">
-            @submission.OrgCodeSnippet
-        </a>
-    </td>
-    <td>
-        <a href="@Url.Action("Details", "CodeReview", new { id = submission.SubmissionId })">
-            @submission.CodeSnippet
-        </a>
-    </td>
-    <td>
-            @submission.Language
-    </td>
-    <td>
-            @submission.CreatedAt.ToString("yyyy-MM-dd HH:mm")
-    </td>
-</tr>
+        <tr>
+            <td>@sl</td>
+            <td>
+                <a href="@Url.Action("Details", "CodeReview", new { id = submission.SubmissionId })">
+                    @submission.OrgCodeSnippet
+                </a>
+            </td>
+            <td>
+                <a href="@Url.Action("Details", "CodeReview", new { id = submission.SubmissionId })">
+                    @submission.CodeSnippet
+                </a>
+            </td>
+            <td>
+                @submission.Language
+            </td>
+            <td>
+                @submission.CreatedAt.ToString("yyyy-MM-dd")
+            </td>
+        </tr>
+            sl++;
         }
     </tbody>
 </table>
         }            
         else
         {
-        <p>You have not submitted any code yet.</p>
+        <p>You have not submitted any code yet</p>
         }
 
 
