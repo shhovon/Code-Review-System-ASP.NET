@@ -9,6 +9,7 @@ using CRS.ViewModels;
 
 namespace CRS.Controllers
 {
+    [Authorize]
     public class CodeReviewController : Controller
     {
         private readonly CRSEntities _context;
