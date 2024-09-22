@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Homepage";
 }
 
 <div class="col-md-4 col-sm-6">
@@ -8,7 +8,11 @@
             <div class="title">
                 <div class="icon"></div><strong>Codes Submitted</strong>
             </div>
-            <div class="number dashtext-1">@ViewBag.TotalSubmissions</div>
+            <div class="number dashtext-1">
+                <a href="@Url.Action("UserCodeSubmissions", "CodeReview")">
+                    @ViewBag.TotalSubmissions
+                </a>
+            </div>
         </div>
         <div class="progress progress-template">
             <div role="progressbar"
@@ -21,4 +25,5 @@
         </div>
     </div>
 </div>
+
 

@@ -310,5 +310,43 @@ namespace CRS.Controllers
                     return false;
             }
         }
+
+        public ActionResult UserCodeSubmissions()
+        {
+            var username = User.Identity.Name; 
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+
+            if (user != null)
+            {
+
+                var userSubmissions = _context.CodeSubmissions
+                    .Where(cs => cs.UserId == user.UserId)
+                    .ToList() 
+
+                    .Select(cs => new UserCodeSubmissionViewModel
+                    {
+                        SubmissionId = cs.SubmissionId,
+                        OrgCodeSnippet = TruncateString(cs.OrgCodeSnippet, 30), 
+                CodeSnippet = TruncateString(cs.CodeSnippet, 30), 
+                Language = cs.Language,
+                        CreatedAt = (DateTime)cs.CreatedAt
+                    })
+                    .ToList();
+
+                return View(userSubmissions);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
+        }
+
+        private string TruncateString(string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+        }
+
+
     }
 }

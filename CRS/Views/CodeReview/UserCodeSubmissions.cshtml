@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "User Code Submissions";
+}
+@model IEnumerable<CRS.ViewModels.UserCodeSubmissionViewModel>
+
+@if (Model != null && Model.Any())
+{
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Original Code</th>
+            <th>Indented Code</th>
+            <th>Language</th>
+            <th>Submission Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var submission in Model)
+        {
+<tr>
+    <td>
+        <a href="@Url.Action("Details", "CodeReview", new { id = submission.SubmissionId })">
+            @submission.OrgCodeSnippet
+        </a>
+    </td>
+    <td>
+        <a href="@Url.Action("Details", "CodeReview", new { id = submission.SubmissionId })">
+            @submission.CodeSnippet
+        </a>
+    </td>
+    <td>
+            @submission.Language
+    </td>
+    <td>
+            @submission.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+    </td>
+</tr>
+        }
+    </tbody>
+</table>
+        }            
+        else
+        {
+        <p>You have not submitted any code yet.</p>
+        }
+
+
